@@ -36,6 +36,10 @@ const CustomerDetail: React.FC = () => {
             setSummaryLoading(true);
             CustomerService.getCustomerSummary(id)
                 .then(setSummary)
+                .catch(err => {
+                    console.error('Failed to load summary:', err);
+                    setSummary(null);
+                })
                 .finally(() => setSummaryLoading(false));
         }
     }, [id]);

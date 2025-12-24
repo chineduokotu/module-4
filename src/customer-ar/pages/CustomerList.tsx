@@ -5,6 +5,7 @@ import {
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton as IonicButton, IonIcon } from '@ionic/react';
 import { add } from 'ionicons/icons';
 import { Customer } from '../types/customer';
+import { CustomerService } from '../services/customer.service';
 import { useCustomers } from '../hooks/useCustomers';
 import { DataTable } from '../components/DataTable';
 import { StatusBadge } from '../components/StatusBadge';
@@ -17,30 +18,42 @@ const CustomerList: React.FC = () => {
     const [statusFilter, setStatusFilter] = useState('');
 
     // Use debounced search or pass search directly
-    const { customers, pagination, loading, error } = useCustomers({
+    const { customers, pagination, loading, error, refetch } = useCustomers({
         page,
         limit: 10,
         search: search || undefined,
         status: statusFilter || undefined
     });
 
+    const handleDelete = async (id: number) => {
+        if (window.confirm('Are you sure you want to delete this customer?')) {
+            try {
+                await CustomerService.deleteCustomer(id.toString());
+                await refetch();
+            } catch (err) {
+                console.error('Failed to delete customer:', err);
+                alert('Failed to delete customer');
+            }
+        }
+    };
+
     const columns = [
-        { id: 'code', label: 'Code', minWidth: 100 },
+        { id: 'customer_code', label: 'Code', minWidth: 100 },
         { id: 'name', label: 'Name', minWidth: 170 },
         {
-            id: 'creditLimit', label: 'Credit Limit', minWidth: 100, align: 'right' as const,
-            format: (value: number) => value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+            id: 'credit_limit', label: 'Credit Limit', minWidth: 100, align: 'right' as const,
+            format: (value: string | number) => Number(value).toLocaleString('en-US', { style: 'currency', currency: 'USD' })
         },
         {
-            id: 'balance', label: 'Balance', minWidth: 100, align: 'right' as const,
-            format: (value: number) => value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+            id: 'current_balance', label: 'Balance', minWidth: 100, align: 'right' as const,
+            format: (value: string | number) => Number(value).toLocaleString('en-US', { style: 'currency', currency: 'USD' })
         },
         {
             id: 'status', label: 'Status', minWidth: 100,
-            format: (value: string) => <StatusBadge status={value} />
+            format: (value: number) => <StatusBadge status={value === 1 ? 'Active' : 'Inactive'} />
         },
         {
-            id: 'actions', label: 'Actions', minWidth: 100, align: 'center' as const,
+            id: 'actions', label: 'Actions', minWidth: 150, align: 'center' as const,
             format: (_: any, row: Customer) => (
                 <Stack direction="row" spacing={1} justifyContent="center">
                     <Button size="small" onClick={(e) => { e.stopPropagation(); history.push(`/customers/${row.id}`); }}>
@@ -48,6 +61,9 @@ const CustomerList: React.FC = () => {
                     </Button>
                     <Button size="small" color="secondary" onClick={(e) => { e.stopPropagation(); history.push(`/customers/${row.id}/statement`); }}>
                         Stmt
+                    </Button>
+                    <Button size="small" color="error" onClick={(e) => { e.stopPropagation(); handleDelete(row.id); }}>
+                        Delete
                     </Button>
                 </Stack>
             )

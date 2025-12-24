@@ -15,16 +15,17 @@ const CustomerForm: React.FC = () => {
     const isEdit = Boolean(id);
     const [loading, setLoading] = useState(false);
 
-    const [formData, setFormData] = useState<Partial<Customer>>({
+    const [formData, setFormData] = useState<any>({
+        requestID: `rid_${Date.now()}`,
         name: '',
-        code: '',
-        customerType: 'Business',
-        status: 'Active',
-        paymentTerms: 'Net 30',
-        creditLimit: 0,
-        currency: 'USD',
         email: '',
-        phone: ''
+        phone: '',
+        classification_id: 1,
+        address: '',
+        city: '',
+        state: '',
+        contact_person: '',
+        credit_limit: 0
     });
 
 
@@ -44,7 +45,7 @@ const CustomerForm: React.FC = () => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData((prev: any) => ({ ...prev, [name]: value }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -54,7 +55,12 @@ const CustomerForm: React.FC = () => {
             if (isEdit && id) {
                 await CustomerService.updateCustomer(id, formData);
             } else {
-                await CustomerService.createCustomer(formData as any);
+                // Generate a fresh requestID for each submission
+                const submitData = {
+                    ...formData,
+                    requestID: `rid_${Date.now()}`
+                };
+                await CustomerService.createCustomer(submitData);
             }
             history.push('/customers');
         } catch (error) {
@@ -93,16 +99,6 @@ const CustomerForm: React.FC = () => {
                                     <TextField
                                         required
                                         fullWidth
-                                        label="Customer Code"
-                                        name="code"
-                                        value={formData.code}
-                                        onChange={handleChange}
-                                    />
-                                </Grid>
-
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        fullWidth
                                         label="Email"
                                         name="email"
                                         type="email"
@@ -110,68 +106,88 @@ const CustomerForm: React.FC = () => {
                                         onChange={handleChange}
                                     />
                                 </Grid>
+
                                 <Grid item xs={12} sm={6}>
                                     <TextField
-                                        select
-                                        fullWidth
-                                        label="Customer Type"
-                                        name="customerType"
-                                        value={formData.customerType ?? 'Business'}
-                                        onChange={handleChange}
-                                    >
-                                        <MenuItem value="Business">Business</MenuItem>
-                                        <MenuItem value="Individual">Individual</MenuItem>
-                                    </TextField>
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
+                                        required
                                         fullWidth
                                         label="Phone"
                                         name="phone"
                                         value={formData.phone}
                                         onChange={handleChange}
+                                        placeholder="+2348012345678"
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        select
+                                        required
+                                        fullWidth
+                                        label="Classification"
+                                        name="classification_id"
+                                        value={formData.classification_id}
+                                        onChange={handleChange}
+                                    >
+                                        <MenuItem value={1}>Type 1</MenuItem>
+                                        <MenuItem value={2}>Type 2</MenuItem>
+                                        <MenuItem value={3}>Type 3</MenuItem>
+                                    </TextField>
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <TextField
+                                        required
+                                        fullWidth
+                                        label="Address"
+                                        name="address"
+                                        value={formData.address}
+                                        onChange={handleChange}
+                                        placeholder="123 Medical Street, Victoria Island"
                                     />
                                 </Grid>
 
                                 <Grid item xs={12} sm={6}>
                                     <TextField
+                                        required
+                                        fullWidth
+                                        label="City"
+                                        name="city"
+                                        value={formData.city}
+                                        onChange={handleChange}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        required
+                                        fullWidth
+                                        label="State"
+                                        name="state"
+                                        value={formData.state}
+                                        onChange={handleChange}
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        required
+                                        fullWidth
+                                        label="Contact Person"
+                                        name="contact_person"
+                                        value={formData.contact_person}
+                                        onChange={handleChange}
+                                        placeholder="Dr. Smith Johnson"
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        required
                                         fullWidth
                                         label="Credit Limit"
-                                        name="creditLimit"
+                                        name="credit_limit"
                                         type="number"
-                                        value={formData.creditLimit}
+                                        value={formData.credit_limit}
                                         onChange={handleChange}
                                     />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        select
-                                        fullWidth
-                                        label="Payment Terms"
-                                        name="paymentTerms"
-                                        value={formData.paymentTerms}
-                                        onChange={handleChange}
-                                    >
-                                        <MenuItem value="Immediate">Immediate</MenuItem>
-                                        <MenuItem value="Net 15">Net 15</MenuItem>
-                                        <MenuItem value="Net 30">Net 30</MenuItem>
-                                        <MenuItem value="Net 60">Net 60</MenuItem>
-                                    </TextField>
-                                </Grid>
-
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        select
-                                        fullWidth
-                                        label="Status"
-                                        name="status"
-                                        value={formData.status}
-                                        onChange={handleChange}
-                                    >
-                                        <MenuItem value="Active">Active</MenuItem>
-                                        <MenuItem value="Inactive">Inactive</MenuItem>
-                                        <MenuItem value="Blocked">Blocked</MenuItem>
-                                    </TextField>
                                 </Grid>
 
                                 <Grid item xs={12}>

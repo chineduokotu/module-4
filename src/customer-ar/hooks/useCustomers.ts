@@ -25,20 +25,37 @@ export const useCustomers = (params: UseCustomersParams = {}) => {
     const fetchCustomers = useCallback(async () => {
         try {
             setLoading(true);
-            const data: PaginatedResponse<Customer> = await CustomerService.getCustomers(
+            const response: any = await CustomerService.getCustomers(
                 page,
                 limit,
                 search,
                 status
             );
-            setCustomers(data.data);
-            setPagination({
-                page: data.page,
-                limit: data.limit,
-                total: data.total,
-                totalPages: data.totalPages
-            });
-            setError(null);
+
+            // Debug: Log the actual response structure
+            console.log('🔍 API Response:', response);
+
+            // Handle backend error format
+            if (response.status === 'false' || response.status === false) {
+                throw new Error(response.message || 'API returned an error');
+            }
+
+            // Handle success format
+            if (response.status_code === 200 && response.status === true && response.data) {
+                console.log('✅ Successfully parsed customers response');
+                setCustomers(response.data.customers || []);
+                setPagination({
+                    page: response.data.page,
+                    limit: response.data.limit,
+                    total: response.data.total,
+                    totalPages: response.data.pages
+                });
+                setError(null);
+            } else {
+                console.error('❌ Unexpected response format:', response);
+                throw new Error('Unexpected API response format');
+            }
+
         } catch (err: any) {
             let errorMessage = 'Failed to fetch customers';
 
