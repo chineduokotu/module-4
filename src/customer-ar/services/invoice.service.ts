@@ -37,7 +37,8 @@ export const InvoiceService = {
             API_ENDPOINTS.INVOICES,
             { customer_id: customerId }
         );
-        return response.data;
+        // Access the array from PaginatedData - key might be 'invoices' or 'customers' depending on API
+        return (response.data as any).invoices || (response.data as any).customers || [];
     },
 
     /**

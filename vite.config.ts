@@ -7,7 +7,7 @@ export default defineConfig({
     server: {
         proxy: {
             '/api': {
-                target: 'https://beninclub1931apps.ng',
+                target: 'https://beninclub1931apps.ng/api',
                 changeOrigin: true,
                 secure: false
             }

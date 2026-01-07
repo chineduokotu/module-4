@@ -1,19 +1,19 @@
 import React from 'react';
 
-// Lazy load pages for performance
-const CustomerList = React.lazy(() => import('./pages/CustomerList'));
-const CustomerForm = React.lazy(() => import('./pages/CustomerForm'));
-const CustomerDetail = React.lazy(() => import('./pages/CustomerDetail'));
-const CustomerInvoices = React.lazy(() => import('./pages/CustomerInvoices'));
-const InvoiceDetail = React.lazy(() => import('./pages/InvoiceDetail'));
-const CustomerReceipts = React.lazy(() => import('./pages/CustomerReceipts'));
-const CustomerLedger = React.lazy(() => import('./pages/CustomerLedger'));
-const CustomerStatement = React.lazy(() => import('./pages/CustomerStatement'));
+// Direct imports (React.lazy removed to fix React 18 + Ionic compatibility issue)
+import CustomerList from './pages/CustomerList';
+import CustomerForm from './pages/CustomerForm';
+import CustomerDetail from './pages/CustomerDetail';
+import CustomerInvoices from './pages/CustomerInvoices';
+import InvoiceDetail from './pages/InvoiceDetail';
+import CustomerReceipts from './pages/CustomerReceipts';
+import CustomerLedger from './pages/CustomerLedger';
+import CustomerStatement from './pages/CustomerStatement';
 
 export interface CustomerRoute {
     path: string;
     exact?: boolean;
-    component: React.LazyExoticComponent<React.FC<any>>;
+    component: React.FC<any>;
     children?: CustomerRoute[];
 }
 

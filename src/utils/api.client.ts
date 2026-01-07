@@ -19,13 +19,29 @@ export class ApiError extends Error {
  * Falls back to static token if no token in localStorage
  */
 const getAuthToken = (): string | null => {
-    // First try localStorage, then fall back to static token
+    // First try to get token from user object in localStorage
+    try {
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+            const user = JSON.parse(userStr);
+            if (user && user.token) {
+                console.log('✅ Using token from user object in localStorage');
+                return user.token;
+            }
+        }
+    } catch (error) {
+        console.warn('Failed to parse user object from localStorage:', error);
+    }
+
+    // Fall back to direct token key
     const storedToken = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
-    if (storedToken) {
+    if (storedToken && storedToken !== 'garbage.token.here') {
+        console.log('✅ Using direct token from localStorage');
         return storedToken;
     }
 
-    // Use static token as fallback (if defined)
+    // Use static token as final fallback (if defined)
+    console.log('⚠️ Using static fallback token');
     return (API_CONFIG as any).STATIC_TOKEN || null;
 };
 

@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Route, Redirect, Switch } from 'react-router-dom';
@@ -41,23 +41,21 @@ const App: React.FC = () => (
         <CssBaseline />
         <IonApp>
             <IonReactRouter>
-                <Suspense fallback={<div>Loading...</div>}>
-                    <IonRouterOutlet>
-                        <Switch>
-                            {customerRoutes.map((route, index) => (
-                                <Route
-                                    key={index}
-                                    path={`/${route.path}`}
-                                    exact={route.exact}
-                                    component={route.component}
-                                />
-                            ))}
-                            <Route exact path="/">
-                                <Redirect to="/customers" />
-                            </Route>
-                        </Switch>
-                    </IonRouterOutlet>
-                </Suspense>
+                <IonRouterOutlet>
+                    <Switch>
+                        {customerRoutes.map((route, index) => (
+                            <Route
+                                key={index}
+                                path={`/${route.path}`}
+                                exact={route.exact}
+                                component={route.component}
+                            />
+                        ))}
+                        <Route exact path="/">
+                            <Redirect to="/customers" />
+                        </Route>
+                    </Switch>
+                </IonRouterOutlet>
             </IonReactRouter>
         </IonApp>
     </ThemeProvider>
