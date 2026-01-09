@@ -6,6 +6,7 @@ import CustomerList from './CustomerList';
 import CustomerDetail from './CustomerDetail';
 import CustomerStatement from './CustomerStatement';
 import InvoiceDetail from './InvoiceDetail';
+import CustomerAging from './CustomerAging';
 
 /**
  * Customer Module Routes
@@ -21,14 +22,17 @@ const CustomerRoutes: React.FC = () => {
                 {/* List Page */}
                 <Route exact path="/customers" component={CustomerList} />
 
+                {/* Aging Report */}
+                <Route exact path="/customers/aging" component={CustomerAging} />
+
                 {/* Statement - standalone page */}
-                <Route exact path="/customers/:id/statement" component={CustomerStatement} />
+                <Route exact path="folder/customers_statement/:id/" component={CustomerStatement} />
 
                 {/* Invoice Detail */}
-                <Route exact path="/invoices/:invoiceId" component={InvoiceDetail} />
+                <Route exact path="folder/invoices/:invoiceId" component={InvoiceDetail} />
 
                 {/* Detail View with optional tab - MUST be last */}
-                <Route path="/customers/:id" component={CustomerDetail} />
+                <Route path="folder/customers/:id" component={CustomerDetail} />
             </Switch>
         </IonRouterOutlet>
     );
