@@ -1,5 +1,5 @@
 import React from 'react';
-import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { IonApp, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Route, Redirect, Switch } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -21,7 +21,8 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
-import { customerRoutes } from './customer-ar/routes';
+// Import the new flat module
+import CustomerRoutes from './modules/customer-ar';
 
 setupIonicReact();
 
@@ -41,21 +42,13 @@ const App: React.FC = () => (
         <CssBaseline />
         <IonApp>
             <IonReactRouter>
-                <IonRouterOutlet>
-                    <Switch>
-                        {customerRoutes.map((route, index) => (
-                            <Route
-                                key={index}
-                                path={`/${route.path}`}
-                                exact={route.exact}
-                                component={route.component}
-                            />
-                        ))}
-                        <Route exact path="/">
-                            <Redirect to="/customers" />
-                        </Route>
-                    </Switch>
-                </IonRouterOutlet>
+                {/* Use the new CustomerRoutes component */}
+                <CustomerRoutes />
+                
+                {/* Default redirect */}
+                <Route exact path="/">
+                    <Redirect to="/customers" />
+                </Route>
             </IonReactRouter>
         </IonApp>
     </ThemeProvider>
