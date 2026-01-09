@@ -3,7 +3,6 @@ import { IonRouterOutlet } from '@ionic/react';
 import { Route, Switch } from 'react-router-dom';
 
 import CustomerList from './CustomerList';
-import CustomerForm from './CustomerForm';
 import CustomerDetail from './CustomerDetail';
 import CustomerStatement from './CustomerStatement';
 import InvoiceDetail from './InvoiceDetail';
@@ -13,22 +12,14 @@ import InvoiceDetail from './InvoiceDetail';
  * This component handles all routing for the Customer Feature Module.
  * It strictly relies on parent app Router context.
  * 
- * IMPORTANT: Route order matters! More specific routes MUST come before parameterized routes.
+ * Note: Customer Create/Edit is handled via modals in CustomerList and CustomerDetail.
  */
 const CustomerRoutes: React.FC = () => {
     return (
         <IonRouterOutlet>
             <Switch>
-                {/* SPECIFIC ROUTES FIRST */}
-                
                 {/* List Page */}
                 <Route exact path="/customers" component={CustomerList} />
-
-                {/* Create New - MUST be before :id routes */}
-                <Route exact path="/customers/new" component={CustomerForm} />
-
-                {/* Edit - specific with /edit suffix */}
-                <Route exact path="/customers/:id/edit" component={CustomerForm} />
 
                 {/* Statement - standalone page */}
                 <Route exact path="/customers/:id/statement" component={CustomerStatement} />
@@ -36,9 +27,7 @@ const CustomerRoutes: React.FC = () => {
                 {/* Invoice Detail */}
                 <Route exact path="/invoices/:invoiceId" component={InvoiceDetail} />
 
-                {/* PARAMETERIZED ROUTES LAST */}
-                
-                {/* Detail View with optional tab */}
+                {/* Detail View with optional tab - MUST be last */}
                 <Route path="/customers/:id" component={CustomerDetail} />
             </Switch>
         </IonRouterOutlet>
@@ -46,3 +35,4 @@ const CustomerRoutes: React.FC = () => {
 };
 
 export default CustomerRoutes;
+

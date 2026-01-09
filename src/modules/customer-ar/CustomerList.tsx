@@ -19,15 +19,18 @@ import {
     IonBadge,
     IonItemSliding,
     IonItemOptions,
-    IonItemOption
+    IonItemOption,
+    IonModal
 } from '@ionic/react';
 import { add, eye, trash, create } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 
 import { requestID, baseUrl, config } from '../../common/utils';
+import CustomerForm from './CustomerForm';
 
-interface Customer {
+// Customer interface - shared type
+export interface Customer {
     id: number;
     customer_code: string;
     name: string;
@@ -40,6 +43,7 @@ interface Customer {
     status: number;
     credit_limit: string;
     current_balance: string;
+    classification_id?: string;
 }
 
 const CustomerList: React.FC = () => {
@@ -52,6 +56,12 @@ const CustomerList: React.FC = () => {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
 
+    // Modal state
+    const [showFormModal, setShowFormModal] = useState(false);
+    const [editCustomerId, setEditCustomerId] = useState<string | null>(null);
+    // State Transfer: Pass customer object directly to avoid extra API call
+    const [editCustomerData, setEditCustomerData] = useState<Customer | null>(null);
+
     const fetchCustomers = async () => {
         setLoading(true);
         try {
@@ -59,7 +69,7 @@ const CustomerList: React.FC = () => {
             formData.append("requestID", requestID());
 
             const response = await axios.post(
-                baseUrl() + "Geacloud_Customers/getAllCustomers_caas",
+                baseUrl() + "Geacloud_Customers",
                 formData,
                 config
             );
@@ -112,6 +122,40 @@ const CustomerList: React.FC = () => {
         }
     };
 
+    // Open modal for new customer
+    const handleNewCustomer = () => {
+        setEditCustomerId(null);
+        setEditCustomerData(null); // No customer data for new
+        setShowFormModal(true);
+    };
+
+    // Open modal for editing customer - STATE TRANSFER: pass customer object
+    const handleEditCustomer = (customer: Customer) => {
+        setEditCustomerId(customer.id.toString());
+        setEditCustomerData(customer); // Pass customer data to avoid API call
+        setShowFormModal(true);
+    };
+
+    // Navigate to customer detail - STATE TRANSFER: pass customer object
+    const handleViewCustomer = (customer: Customer) => {
+        history.push(`/customers/${customer.id}`, { customer });
+    };
+
+    // Handle form success (close modal and refresh)
+    const handleFormSuccess = () => {
+        setShowFormModal(false);
+        setEditCustomerId(null);
+        setEditCustomerData(null);
+        fetchCustomers();
+    };
+
+    // Handle form cancel
+    const handleFormCancel = () => {
+        setShowFormModal(false);
+        setEditCustomerId(null);
+        setEditCustomerData(null);
+    };
+
     useEffect(() => {
         fetchCustomers();
     }, []);
@@ -140,7 +184,7 @@ const CustomerList: React.FC = () => {
                 <IonToolbar>
                     <IonTitle>Customers</IonTitle>
                     <IonButtons slot="end">
-                        <IonButton onClick={() => history.push('/customers/new')}>
+                        <IonButton onClick={handleNewCustomer}>
                             <IonIcon icon={add} slot="start" />
                             New
                         </IonButton>
@@ -183,7 +227,7 @@ const CustomerList: React.FC = () => {
                             <IonItemSliding key={customer.id}>
                                 <IonItem 
                                     button 
-                                    onClick={() => history.push(`/customers/${customer.id}`)}
+                                    onClick={() => handleViewCustomer(customer)}
                                     detail={true}
                                 >
                                     <IonLabel>
@@ -207,13 +251,13 @@ const CustomerList: React.FC = () => {
                                 <IonItemOptions side="end">
                                     <IonItemOption 
                                         color="primary"
-                                        onClick={() => history.push(`/customers/${customer.id}`)}
+                                        onClick={() => handleViewCustomer(customer)}
                                     >
                                         <IonIcon icon={eye} slot="icon-only" />
                                     </IonItemOption>
                                     <IonItemOption 
                                         color="secondary"
-                                        onClick={() => history.push(`/customers/${customer.id}/edit`)}
+                                        onClick={() => handleEditCustomer(customer)}
                                     >
                                         <IonIcon icon={create} slot="icon-only" />
                                     </IonItemOption>
@@ -234,6 +278,20 @@ const CustomerList: React.FC = () => {
                         Showing {filteredCustomers.length} of {customers.length} customers
                     </div>
                 )}
+
+                {/* Customer Form Modal - STATE TRANSFER: pass customerData */}
+                <IonModal 
+                    isOpen={showFormModal} 
+                    onDidDismiss={handleFormCancel}
+                >
+                    <CustomerForm
+                        isModal={true}
+                        customerId={editCustomerId}
+                        customerData={editCustomerData}
+                        onSuccess={handleFormSuccess}
+                        onCancel={handleFormCancel}
+                    />
+                </IonModal>
             </IonContent>
         </IonPage>
     );

@@ -12,7 +12,7 @@ export const requestID = (): string => {
 
 // Get the base URL for API calls
 export const baseUrl = (): string => {
-    return '/api/';
+    return '/api';
 };
 
 // Axios config with headers
