@@ -134,7 +134,7 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
             formDataReq.append("customer_id", id!);
 
             const response = await axios.post(
-                baseUrl() + "Geacloud_Customers/getCustomer_caas",
+                baseUrl() + "Geacloud_Customers",
                 formDataReq,
                 config
             );
@@ -193,14 +193,14 @@ const CustomerForm: React.FC<CustomerFormProps> = ({
             if (isEdit && id) {
                 submitData.append("customer_id", id);
                 await axios.post(
-                    baseUrl() + "Geacloud_Customers/updateCustomer_caas",
+                    baseUrl() + "Geacloud_Customers",
                     submitData,
                     config
                 );
                 setToastMessage("Customer updated successfully");
             } else {
                 await axios.post(
-                    baseUrl() + "Geacloud_Customers/createCustomer_caas",
+                    baseUrl() + "Geacloud_Customers",
                     submitData,
                     config
                 );

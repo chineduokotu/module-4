@@ -45,7 +45,7 @@ const CustomerLedger: React.FC = () => {
             formData.append("customer_id", id);
 
             const response = await axios.post(
-                baseUrl() + "geacloud_ledger/getCustomerLedger_caas",
+                baseUrl() + "geacloud_ledger",
                 formData,
                 config
             );

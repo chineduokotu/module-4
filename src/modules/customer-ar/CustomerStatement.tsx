@@ -65,7 +65,7 @@ const CustomerStatement: React.FC = () => {
             customerForm.append("customer_id", id);
 
             const customerResponse = await axios.post(
-                baseUrl() + "Geacloud_Customers/getCustomer_caas",
+                baseUrl() + "Geacloud_Customers",
                 customerForm,
                 config
             );
@@ -79,7 +79,7 @@ const CustomerStatement: React.FC = () => {
             stmtForm.append("customer_id", id);
 
             const stmtResponse = await axios.post(
-                baseUrl() + "geacloud_reports/getCustomerStatement_caas",
+                baseUrl() + "geacloud_reports",
                 stmtForm,
                 config
             );

@@ -45,7 +45,7 @@ const CustomerInvoices: React.FC = () => {
             formData.append("customer_id", id);
 
             const response = await axios.post(
-                baseUrl() + "geacloud_invoices/getInvoicesByCustomer_caas",
+                baseUrl() + "geacloud_invoices",
                 formData,
                 config
             );
@@ -100,7 +100,7 @@ const CustomerInvoices: React.FC = () => {
                         <IonItem 
                             key={invoice.id} 
                             button 
-                            onClick={() => history.push(`/invoices/${invoice.id}`)}
+                            onClick={() => history.push(`folder/invoices/${invoice.id}`)}
                             detail
                         >
                             <IonLabel>

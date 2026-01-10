@@ -106,7 +106,7 @@ const CustomerList: React.FC = () => {
             formData.append("customer_id", customerId.toString());
 
             await axios.post(
-                baseUrl() + "Geacloud_Customers/deleteCustomer_caas",
+                baseUrl() + "Geacloud_Customers",
                 formData,
                 config
             );
@@ -138,7 +138,7 @@ const CustomerList: React.FC = () => {
 
     // Navigate to customer detail - STATE TRANSFER: pass customer object
     const handleViewCustomer = (customer: Customer) => {
-        history.push(`/customers/${customer.id}`, { customer });
+        history.push(`folder/customers/${customer.id}`, { customer });
     };
 
     // Handle form success (close modal and refresh)

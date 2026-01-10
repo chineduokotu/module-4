@@ -47,7 +47,7 @@ const CustomerReceipts: React.FC = () => {
             formData.append("customer_id", id);
 
             const response = await axios.post(
-                baseUrl() + "geacloud_receipts/getReceiptsByCustomer_caas",
+                baseUrl() + "geacloud_receipts",
                 formData,
                 config
             );

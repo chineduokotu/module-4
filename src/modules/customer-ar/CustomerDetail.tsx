@@ -114,7 +114,7 @@ const CustomerDetail: React.FC = () => {
             formData.append("customer_id", id);
 
             const response = await axios.post(
-                baseUrl() + "Geacloud_Customers/getCustomer_caas",
+                baseUrl() + "Geacloud_Customers",
                 formData,
                 config
             );
@@ -144,9 +144,9 @@ const CustomerDetail: React.FC = () => {
     const handleTabChange = (tab: string) => {
         setActiveTab(tab);
         if (tab === 'overview') {
-            history.push(`/customers/${id}`);
+            history.push(`folder/customers/${id}`);
         } else {
-            history.push(`/customers/${id}/${tab}`);
+            history.push(`folder/customers/${id}/${tab}`);
         }
     };
 
@@ -293,7 +293,7 @@ const CustomerDetail: React.FC = () => {
                         </IonGrid>
 
                         <div style={{ padding: '16px' }}>
-                            <IonButton expand="block" onClick={() => history.push(`/customers/${id}/statement`)}>
+                            <IonButton expand="block" onClick={() => history.push(`folder/customers_statement/${id}/`)}>
                                 View Statement
                             </IonButton>
                         </div>
